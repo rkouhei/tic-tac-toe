@@ -12,28 +12,24 @@ function Square (props) {
 
 class Board extends React.Component {
   renderSquare (i) {
-    return <Square value={this.props.squares[i]} onClick={() => this.props.onClick(i)} />;
+    return (
+    <Square key={i} value={this.props.squares[i]} onClick={() => this.props.onClick(i)} />
+    );
   }
 
   render () {
+    const items = Array(3);
+    for (let i = 0; i < 3; i++) {
+      const col_item = Array(3);
+      for (let j = 0; j < 3; j++) {
+        col_item[j] = this.renderSquare(i*3+j);
+      }
+      items[i] = (
+        <div key={i} className="board-row">{col_item}</div>
+      );
+    }
     return (
-      <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
-      </div>
+      <div>{items}</div>
     );
   }
 }
@@ -89,7 +85,7 @@ class Game extends React.Component {
 
     const moves = history.map((step, move) => {
       let oldplayer = (move % 2) === 0 ? 'O' : 'X';
-      let choicehand = move > 0 ? ' ,' + oldplayer + "'s turn " + 'row: ' + history[move].row + ', col: ' + history[move].col : null;
+      let choicehand = move > 0 ? ' ,' + oldplayer + ' turn ' + 'row: ' + history[move].row + ', col: ' + history[move].col : null;
       let desc = move ? 'Go to move #' + move + choicehand : 'Go to game start';
       if (this.state.stepNumber === move) {
         desc = <strong>{desc}</strong>;
